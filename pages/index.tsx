@@ -27,7 +27,7 @@ export default function Home() {
   }>({
     messages: [
       {
-        message: 'Hi, what would you like to learn about this legal case?',
+        message: 'Hi, what would you like to learn about Diyar Faraj?',
         type: 'apiMessage',
       },
     ],
@@ -87,6 +87,7 @@ export default function Home() {
         }),
         signal: ctrl.signal,
         onmessage: (event) => {
+          console.log('event', event);
           if (event.data === '[DONE]') {
             setMessageState((state) => ({
               history: [...state.history, [question, state.pending ?? '']],

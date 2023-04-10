@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import client from '../../cosmosDb';
+import axios from 'axios';
 
 export default async function handler(
   req: NextApiRequest,
@@ -18,7 +19,23 @@ export default async function handler(
     const date = new Date().toISOString();
 
     try {
-      await container.items.create({ message, ip, date });
+      console.log(ip);
+      console.log(process.env.APIINFO_KEY);
+
+      const response = await axios.get(
+        `https://ipinfo.io/${'ip'}?token=${process.env.APIINFO_KEY}`,
+      );
+      const { city, region, country, loc } = response.data;
+
+      await container.items.create({
+        message,
+        ip,
+        date,
+        city,
+        region,
+        country,
+        loc,
+      });
       res.status(201).json({ success: true });
     } catch (error) {
       console.error('Error saving message:', error);

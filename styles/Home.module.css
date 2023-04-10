@@ -1,4 +1,14 @@
 .main {
+  overflow-y: scroll;
+  scrollbar-width: none; /* For Firefox */
+  -ms-overflow-style: none; /* For Internet Explorer and Edge */
+}
+
+/* For Chrome, Safari, and Opera */
+.main::-webkit-scrollbar {
+  display: none;
+}
+.main {
   font-family: 'Courier New', monospace;
   background-color: #000;
   justify-content: center;

@@ -17,7 +17,8 @@ export default function Home() {
   }>({
     messages: [
       {
-        message: 'hello friend, what brings you here?',
+        message:
+          "hello friend :) I'm Diyar's AI assistant, here to answer questions about him.",
         type: 'apiMessage',
       },
     ],
@@ -142,6 +143,7 @@ export default function Home() {
       setError('An error occurred while fetching the data. Please try again.');
       console.log('error', error);
     }
+    textAreaRef.current?.focus();
   }
 
   //prevent empty submissions
@@ -149,6 +151,7 @@ export default function Home() {
     (e: any) => {
       if (e.key === 'Enter' && query) {
         handleSubmit(e);
+        textAreaRef.current?.focus();
       } else if (e.key == 'Enter') {
         e.preventDefault();
       }
@@ -215,7 +218,7 @@ export default function Home() {
             disabled={loading}
             onKeyDown={handleEnter}
             ref={textAreaRef}
-            autoFocus={true}
+            autoFocus={false}
             id="userInput"
             name="userInput"
             placeholder={loading ? 'loading...' : 'type your message here'}

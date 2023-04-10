@@ -1,0 +1,5 @@
+{
+  "appService.zipIgnorePattern": ["node_modules{,/**}", ".vscode{,/**}"],
+  "appService.defaultWebAppToDeploy": "/subscriptions/ee97fa78-d57b-4c30-a6f4-2429237b5a51/resourceGroups/rg-test/providers/Microsoft.Web/sites/diyar-bot",
+  "appService.deploySubpath": "."
+}

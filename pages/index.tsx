@@ -93,6 +93,15 @@ export default function Home() {
     const ctrl = new AbortController();
 
     try {
+      // Save the message to the database
+      await fetch('/api/save-message', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ message: question }),
+      });
+
       fetchEventSource('/api/chat', {
         method: 'POST',
         headers: {

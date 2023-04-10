@@ -14,9 +14,11 @@ export default async function handler(
     }
 
     const container = client.database('DiyarBotDb').container('messages');
+    const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+    const date = new Date().toISOString();
 
     try {
-      await container.items.create({ message });
+      await container.items.create({ message, ip, date });
       res.status(201).json({ success: true });
     } catch (error) {
       console.error('Error saving message:', error);

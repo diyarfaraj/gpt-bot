@@ -18,7 +18,7 @@ export default function Home() {
     messages: [
       {
         message:
-          "hello friend :) I'm Diyar's AI assistant, here to answer questions about him.",
+          "hello friend :) I'm Diyar's AI assistant, here to answer questions about his career.",
         type: 'apiMessage',
       },
     ],

@@ -15,9 +15,9 @@ export default async function handler(
     }
 
     const container = client.database('DiyarBotDb').container('messages');
-    // const ipAddress: string | string[] | undefined =
-    // req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-    const ipAddress = '80.79.80.23:21671';
+    const ipAddress: string | string[] | undefined =
+      req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+    //const ipAddress = '80.79.80.23:21671';
 
     const regex: RegExp = /^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/;
     const matches: RegExpMatchArray | null | undefined = Array.isArray(

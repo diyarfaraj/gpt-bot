@@ -18,7 +18,7 @@ export default function Home() {
     messages: [
       {
         message:
-          "hello friend :) I'm Diyar's AI assistant, here to answer questions about his career.",
+          "hello friend :) I'm Diyar's AI assistant, here to answer questions about him.",
         type: 'apiMessage',
       },
     ],
@@ -230,7 +230,7 @@ export default function Home() {
             autoFocus={false}
             id="userInput"
             name="userInput"
-            placeholder={loading ? 'loading...' : 'type your message here'}
+            placeholder={loading ? 'thinking...' : 'type your message here'}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             className={styles.input}

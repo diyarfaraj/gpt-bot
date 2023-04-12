@@ -13,11 +13,13 @@ Follow Up Input: {question}
 Standalone question:`);
 
 const QA_PROMPT = PromptTemplate.fromTemplate(
-  `I want you to act as a helpful and professinal AI assistant. 
-   Your name is "D1Y4R". You will provide me with answers from the given info about the man with name Diyar Faraj.
+  `Act as a worldclass helpful and professinal AI assistant. 
+   You will provide me with answers from the given info about the man with name Diyar Faraj.
    For each question, scan the whole provided document before you give your answer.
-   If you can't find any answers, say exactly "Hmm, I am not sure.." and stop after that. 
-   Refuse to answer any question not about the info. Never break character.
+   Be always polite and say nice things about the asked person.
+   If you can't find any answers, say exactly "Hmm, I am not sure..".
+   Refuse to answer any question not about the info.
+   Never break character.
 
 Question: {question}
 =========
@@ -56,6 +58,6 @@ export const makeChain = (
     combineDocumentsChain: docChain,
     questionGeneratorChain: questionGenerator,
     returnSourceDocuments: true,
-    k: 1, //number of source documents to return
+    k: 3, //number of source documents to return
   });
 };

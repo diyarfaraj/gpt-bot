@@ -29,7 +29,7 @@ export default function Home() {
   const { messages, pending, history, pendingSourceDocs } = messageState;
 
   const messageListRef = useRef<HTMLDivElement>(null);
-  const textAreaRef = useRef<HTMLInputElement>(null);
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const firstMessageRef = useRef<HTMLDivElement | null>(null);
 
   function typeMessage(
@@ -223,7 +223,7 @@ export default function Home() {
         </div>
 
         <form onSubmit={handleSubmit}>
-          <input
+          <textarea
             disabled={loading}
             onKeyDown={handleEnter}
             ref={textAreaRef}
@@ -233,8 +233,30 @@ export default function Home() {
             placeholder={loading ? 'thinking...' : 'type your message here'}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className={styles.input}
+            className={`${styles.input} flex-grow w-full max-w-xs md:max-w-md lg:max-w-lg`}
+            rows={1} // Adjust the number of rows to your preference
           />
+          <button
+            type="submit"
+            className="ml-2 p-1 rounded-md text-gray-500 hover:bg-gray-100"
+            disabled={loading}
+          >
+            <svg
+              stroke="currentColor"
+              fill="none"
+              strokeWidth="2"
+              viewBox="0 0 24 24"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="h-4 w-4"
+              height="1em"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+          </button>
         </form>
 
         {error && (

@@ -38,7 +38,7 @@
   color: #0f0;
   outline: none;
   font-family: 'Courier New', monospace;
-  width: 1000px;
+  resize: none;
 }
 
 .usermessage {

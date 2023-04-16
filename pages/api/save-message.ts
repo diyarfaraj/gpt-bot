@@ -16,7 +16,7 @@ export default async function handler(
     const container = client.database('DiyarBotDb').container('messages');
     let ipAddress: string | string[] | undefined = '';
     if (process.env.NODE_ENV === 'development') {
-      ipAddress = '80.79.81.23:21671';
+      ipAddress = '85.79.81.23:21671';
     } else {
       ipAddress =
         req.headers['x-forwarded-for'] || req.connection.remoteAddress;
@@ -46,8 +46,6 @@ export default async function handler(
         );
 
         document.message = uniqueMessages;
-
-        console.log('diyar docu mess', document.message);
 
         await container.items.upsert(document);
         res.status(200).json({ success: true });

@@ -114,7 +114,6 @@ export default function Home() {
         }),
         signal: ctrl.signal,
         onmessage: async (event) => {
-          // console.log('event', event);
           if (event.data === '[DONE]') {
             setMessageState((state) => ({
               history: [...state.history, [question, state.pending ?? '']],
@@ -192,10 +191,11 @@ export default function Home() {
   }, [chatMessages]);
 
   useEffect(() => {
-    if (messages.length > 0) {
+    const lastMessage = messages[messages.length - 1];
+    if (lastMessage && lastMessage.type === 'apiMessage') {
       saveMessagesToDb();
     }
-  }, [messages, saveMessagesToDb]);
+  }, [messages.length]);
 
   return (
     <>

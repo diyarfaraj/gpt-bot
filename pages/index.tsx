@@ -17,8 +17,7 @@ export default function Home() {
   }>({
     messages: [
       {
-        message:
-          "hello friend :) I'm Diyar's AI assistant, here to answer questions about him.",
+        message: `hello friend :) I'm Diyar's AI assistant, here to answer questions about him.(Även på svenska)`,
         type: 'apiMessage',
       },
     ],
@@ -61,6 +60,17 @@ export default function Home() {
     }
   }, []);
 
+  async function saveMessagesToDb() {
+    // Save the message to the database
+    await fetch('/api/save-message', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ message: messages }),
+    });
+  }
+
   //handle form submission
   async function handleSubmit(e: any) {
     e.preventDefault();
@@ -93,15 +103,6 @@ export default function Home() {
     const ctrl = new AbortController();
 
     try {
-      // Save the message to the database
-      await fetch('/api/save-message', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ message: question }),
-      });
-
       fetchEventSource('/api/chat', {
         method: 'POST',
         headers: {
@@ -112,7 +113,7 @@ export default function Home() {
           history,
         }),
         signal: ctrl.signal,
-        onmessage: (event) => {
+        onmessage: async (event) => {
           // console.log('event', event);
           if (event.data === '[DONE]') {
             setMessageState((state) => ({
@@ -189,6 +190,12 @@ export default function Home() {
       messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
     }
   }, [chatMessages]);
+
+  useEffect(() => {
+    if (messages.length > 0) {
+      saveMessagesToDb();
+    }
+  }, [messages, saveMessagesToDb]);
 
   return (
     <>

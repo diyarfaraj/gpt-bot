@@ -32,6 +32,7 @@ export default function Home() {
   const messageListRef = useRef<HTMLDivElement>(null);
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const firstMessageRef = useRef<HTMLDivElement | null>(null);
+  const [uploadedFile, setUploadedFile] = useState(null);
 
   const toggleSettings = () => {
     setShowSettings((prevShowSettings) => !prevShowSettings);
@@ -203,107 +204,137 @@ export default function Home() {
     }
   }, [messages.length]);
 
+  const handleFileUpload = async (e: any) => {
+    const file = e.target.files[0];
+    if (!file) {
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const response = await fetch('/api/uploadPdf', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to upload file');
+      }
+
+      const result = await response.json();
+      setUploadedFile(result.fileName);
+      alert('File uploaded successfully');
+    } catch (error) {
+      console.error('Error uploading file:', error);
+      alert('Failed to upload file');
+    }
+  };
+
   return (
     <>
-      <button
-        onClick={toggleSettings}
-        className="absolute top-0 right-0 p-2 text-white"
-      >
-        Toggle Settings
-      </button>
+      <main className={styles.main}>
+        <button
+          onClick={toggleSettings}
+          className="absolute top-0 right-0 p-2 z-10 "
+        >
+          Toggle Settings
+        </button>
 
-      {showSettings && (
-        <section className="absolute top-0 left-0 w-full h-full bg-white p-4">
-          <h2 className="text-xl font-bold mb-4">Settings</h2>
-          <div className="mt-4">
-            <form>
-              <input
-                type="file"
-                accept="application/pdf"
-                // onChange={handleFileUpload}
-              />
-            </form>
-          </div>
-        </section>
-      )}
-
-      {!showSettings && (
-        <main className={styles.main}>
-          <div ref={messageListRef} className={styles.messagelist}>
-            {chatMessages.map((message, index) => {
-              let className;
-              if (message.type === 'apiMessage') {
-                className = styles.apimessage;
-              } else {
-                // The latest message sent by the user will be animated while waiting for a response
-                className =
-                  loading && index === chatMessages.length - 1
-                    ? styles.usermessagewaiting
-                    : styles.usermessage;
-              }
-              return (
-                <>
-                  <div key={`chatMessage-${index}`} className={className}>
-                    <div
-                      className={styles.markdownanswer}
-                      ref={index === 0 ? firstMessageRef : null}
-                    >
-                      <ReactMarkdown linkTarget="_blank">
-                        {message.message}
-                      </ReactMarkdown>
+        {showSettings ? (
+          <section className="absolute top-0 left-0 w-full h-full bg-white p-4">
+            <h2 className="text-xl font-bold mb-4">Settings</h2>
+            <div className="mt-4">
+              <form>
+                <input
+                  type="file"
+                  accept="application/pdf"
+                  onChange={handleFileUpload}
+                />
+              </form>
+            </div>
+          </section>
+        ) : (
+          <div className={styles.chatSection}>
+            <div ref={messageListRef} className={styles.messagelist}>
+              {chatMessages.map((message, index) => {
+                let className;
+                if (message.type === 'apiMessage') {
+                  className = styles.apimessage;
+                } else {
+                  // The latest message sent by the user will be animated while waiting for a response
+                  className =
+                    loading && index === chatMessages.length - 1
+                      ? styles.usermessagewaiting
+                      : styles.usermessage;
+                }
+                return (
+                  <>
+                    <div key={`chatMessage-${index}`} className={className}>
+                      <div
+                        className={styles.markdownanswer}
+                        ref={index === 0 ? firstMessageRef : null}
+                      >
+                        <ReactMarkdown linkTarget="_blank">
+                          {message.message}
+                        </ReactMarkdown>
+                      </div>
                     </div>
-                  </div>
-                </>
-              );
-            })}
-          </div>
+                  </>
+                );
+              })}
+            </div>
 
-          <form onSubmit={handleSubmit}>
-            <div className="flex">
-              <textarea
-                disabled={loading}
-                onKeyDown={handleEnter}
-                ref={textAreaRef}
-                autoFocus={false}
-                id="userInput"
-                name="userInput"
-                placeholder={loading ? 'thinking...' : 'type your message here'}
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                className={`${styles.input} flex-grow w-full max-w-xs md:max-w-md lg:max-w-lg`}
-                rows={1} // Adjust the number of rows to your preference
-              />
-              <button
-                type="submit"
-                className="ml-2 p-1 rounded-md text-gray-500 hover:bg-gray-100"
-                disabled={loading}
-              >
-                <svg
-                  stroke="currentColor"
-                  fill="none"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="h-4 w-4"
-                  height="1em"
-                  width="1em"
-                  xmlns="http://www.w3.org/2000/svg"
+            <form onSubmit={handleSubmit}>
+              <div className="flex">
+                <textarea
+                  disabled={loading}
+                  onKeyDown={handleEnter}
+                  ref={textAreaRef}
+                  autoFocus={false}
+                  id="userInput"
+                  name="userInput"
+                  placeholder={
+                    loading ? 'thinking...' : 'type your message here'
+                  }
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  className={`${styles.input} flex-grow w-full max-w-xs md:max-w-md lg:max-w-lg`}
+                  rows={1} // Adjust the number of rows to your preference
+                />
+                <button
+                  type="submit"
+                  className="ml-2 p-1 rounded-md text-gray-500 hover:bg-gray-100"
+                  disabled={loading}
                 >
-                  <line x1="22" y1="2" x2="11" y2="13"></line>
-                  <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                </svg>
-              </button>
-            </div>
-          </form>
+                  <svg
+                    stroke="currentColor"
+                    fill="none"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="h-4 w-4"
+                    height="1em"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                  </svg>
+                </button>
+              </div>
+            </form>
 
-          {error && (
-            <div className="border border-red-400 rounded-md p-4">
-              <p className="text-red-500">{error}</p>
-            </div>
-          )}
-        </main>
-      )}
+            {error && (
+              <div className="border border-red-400 rounded-md p-4">
+                <p className="text-red-500">{error}</p>
+              </div>
+            )}
+          </div>
+        )}
+      </main>
     </>
   );
 }

@@ -11,11 +11,8 @@ if (!endpoint || !key || !databaseId || !containerId) {
 
 const client = new CosmosClient({ endpoint, key });
 
-export default client;
-
-// const client = new CosmosClient({ endpoint, key });
-
-// const database = client.database(databaseId);
-// const container = database.container(containerId);
-
-// export default container;
+const database = client.database(databaseId);
+console.log(`Database: ${databaseId}`);
+const container = database.container(containerId);
+console.log(`Container: ${containerId}`);
+export default container;

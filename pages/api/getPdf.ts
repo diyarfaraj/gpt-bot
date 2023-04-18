@@ -1,38 +1,52 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import nextConnect from 'next-connect';
-import container from '@azure/cosmos';
 
-const apiRoute = nextConnect<NextApiRequest, NextApiResponse>({
-  onError(error, _, res) {
-    console.error('Error during file retrieval:', error);
-    res
-      .status(501)
-      .json({ error: `Sorry, something went wrong: ${error.message}` });
-  },
-  onNoMatch(req, res) {
-    res.status(405).json({ error: `Method ${req.method} not allowed` });
-  },
-});
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse,
+) {
+  if (req.method === 'GET') {
+    // const { pdfId } = req.query;
 
-apiRoute.get(async (req: NextApiRequest, res: NextApiResponse) => {
-  const { id } = req.query;
+    // if (!pdfId) {
+    //   res.status(400).json({ error: 'Missing pdfId parameter' });
+    //   return;
+    // }
 
-  try {
-    const { resource: pdfItem } = await container.item(id as string).read();
-    const pdfBuffer = Buffer.from(pdfItem.data, 'base64');
+    const ip: string = getUserIpAdress(req);
 
-    res.setHeader('Content-Type', pdfItem.mimeType);
-    res.setHeader(
-      'Content-Disposition',
-      `attachment; filename=${pdfItem.fileName}`,
-    );
-    res.status(200).send(pdfBuffer);
-  } catch (error) {
-    console.error('Error retrieving the file from Cosmos DB:', error);
-    res.status(500).json({
-      error: `Error retrieving the file from Cosmos DB: ${error.message}`,
-    });
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/getPdf/pdf-${ip}`,
+      );
+
+      if (!response.ok) {
+        throw new Error('Failed to get PDF');
+      }
+
+      const data = await response.json();
+      res.status(200).json(data);
+    } catch (error: any) {
+      console.error('Error getting PDF:', error);
+      res.status(500).json({ error: `Error getting PDF: ${error.message}` });
+    }
+  } else {
+    res.setHeader('Allow', 'GET');
+    res.status(405).end(`Method ${req.method} Not Allowed`);
   }
-});
+}
 
-export default apiRoute;
+function getUserIpAdress(req: NextApiRequest) {
+  let ipAddress: string | string[] | undefined = '';
+  if (process.env.NODE_ENV === 'development') {
+    ipAddress = '127.0.0.1:21671';
+  } else {
+    ipAddress = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+  }
+
+  const regex: RegExp = /^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/;
+  const matches: RegExpMatchArray | null | undefined = Array.isArray(ipAddress)
+    ? ipAddress[0].match(regex)
+    : ipAddress?.match(regex);
+  const ip: string = matches ? matches[1] : '';
+  return ip;
+}

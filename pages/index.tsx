@@ -248,12 +248,14 @@ export default function Home() {
   return (
     <>
       <main className={styles.main}>
-        <button
-          onClick={toggleSettings}
-          className="absolute top-0 right-0 p-2 z-10 "
-        >
-          Toggle Settings
-        </button>
+        {process.env.NODE_ENV === 'development' ? (
+          <button
+            onClick={toggleSettings}
+            className="absolute top-0 right-0 p-2 z-10 "
+          >
+            Toggle Settings
+          </button>
+        ) : null}
 
         {showSettings ? (
           <section className="absolute top-0 left-0 w-full h-full bg-white p-4">

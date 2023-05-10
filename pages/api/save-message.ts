@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import client from '../../cosmosDb';
+import container from '../../cosmosDb';
 import axios from 'axios';
 
 export default async function handler(
@@ -13,22 +13,8 @@ export default async function handler(
       return;
     }
 
-    const container = client.database('DiyarBotDb').container('messages');
-    let ipAddress: string | string[] | undefined = '';
-    if (process.env.NODE_ENV === 'development') {
-      ipAddress = '85.79.81.23:21671';
-    } else {
-      ipAddress =
-        req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-    }
-
-    const regex: RegExp = /^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/;
-    const matches: RegExpMatchArray | null | undefined = Array.isArray(
-      ipAddress,
-    )
-      ? ipAddress[0].match(regex)
-      : ipAddress?.match(regex);
-    const ip: string = matches ? matches[1] : '';
+    // const container = client.database('DiyarBotDb').container('messages');
+    const ip: string = getUserIpAdress(req);
     const date = new Date().toISOString();
 
     try {
@@ -73,6 +59,22 @@ export default async function handler(
   } else {
     res.status(405).json({ error: 'Method not allowed' });
   }
+}
+
+function getUserIpAdress(req: NextApiRequest) {
+  let ipAddress: string | string[] | undefined = '';
+  if (process.env.NODE_ENV === 'development') {
+    ipAddress = '127.0.0.1:21671';
+  } else {
+    ipAddress = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+  }
+
+  const regex: RegExp = /^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/;
+  const matches: RegExpMatchArray | null | undefined = Array.isArray(ipAddress)
+    ? ipAddress[0].match(regex)
+    : ipAddress?.match(regex);
+  const ip: string = matches ? matches[1] : '';
+  return ip;
 }
 
 function filterUniqueMessages(messages: any) {

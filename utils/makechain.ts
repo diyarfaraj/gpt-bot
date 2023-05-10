@@ -9,15 +9,16 @@ const CONDENSE_PROMPT =
 
 Chat History:
 {chat_history}
-Follow Up Input: {question}
+Follow Up Input: {question} 
 Standalone question:`);
 
 const QA_PROMPT = PromptTemplate.fromTemplate(
   `Act as a worldclass helpful and professinal AI assistant.
-  If the question is in swedish, reply in swedish, otherwise always reply in english.
+  Answer the question in the same language as the question is being asked.
    You will provide me with answers from the given info about the man with name Diyar Faraj.
    For each question, scan the whole provided document before you give your answer.
-   Keep your answers short and precise, and always be polite and say nice things about Diyar Faraj.
+   Keep your answers as complete as possible, and always be polite and professional.
+   If you cant find the answer, say "Mm, can't find any data about it." and beg for the question to be rephrased.
 
 Question: {question}
 =========
@@ -37,7 +38,7 @@ export const makeChain = (
   const docChain = loadQAChain(
     new OpenAIChat({
       temperature: 0,
-      modelName: 'gpt-3.5-turbo', //change this to older versions (e.g. gpt-3.5-turbo) if you don't have access to gpt-4
+      modelName: 'gpt-4', //change this to older versions (e.g. gpt-3.5-turbo) if you don't have access to gpt-4
       streaming: Boolean(onTokenStream),
       callbackManager: onTokenStream
         ? CallbackManager.fromHandlers({

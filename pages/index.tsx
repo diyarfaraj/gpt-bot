@@ -108,60 +108,56 @@ export default function Home() {
 
     setLoading(true);
     setQuery('');
-    setMessageState((state) => ({ ...state, pending: '' }));
-
-    const ctrl = new AbortController();
 
     try {
-      fetchEventSource('/api/chat', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
+      const response = await fetch(
+        `http://localhost:5000/api/ask?question=${encodeURIComponent(
           question,
-          history,
-        }),
-        signal: ctrl.signal,
-        onmessage: async (event) => {
-          if (event.data === '[DONE]') {
-            setMessageState((state) => ({
-              history: [...state.history, [question, state.pending ?? '']],
-              messages: [
-                ...state.messages,
-                {
-                  type: 'apiMessage',
-                  message: state.pending ?? '',
-                  sourceDocs: state.pendingSourceDocs,
-                },
-              ],
-              pending: undefined,
-              pendingSourceDocs: undefined,
-            }));
-            setLoading(false);
-            ctrl.abort();
-          } else {
-            const data = JSON.parse(event.data);
-            if (data.sourceDocs) {
+        )}`,
+      );
+      const data = await response.json();
+
+      // Simulate typing animation by adding characters one by one with delay
+      const simulateTyping = (text: string) => {
+        return new Promise((resolve) => {
+          let i = 0;
+          const intervalId = setInterval(() => {
+            if (i < text.length) {
               setMessageState((state) => ({
                 ...state,
-                pendingSourceDocs: data.sourceDocs,
+                pending: (state.pending ?? '') + text.charAt(i),
               }));
+              i++;
             } else {
-              setMessageState((state) => ({
-                ...state,
-                pending: (state.pending ?? '') + data.data,
-              }));
+              clearInterval(intervalId);
+              resolve(null);
             }
-          }
-          textAreaRef.current?.focus();
-        },
-      });
+          }, 20); // Change delay as needed, lower means faster
+        });
+      };
+
+      await simulateTyping(data.answer.output_text);
+
+      setMessageState((state) => ({
+        ...state,
+        history: [...state.history, [question, data.answer.output_text]],
+        messages: [
+          ...state.messages,
+          {
+            type: 'apiMessage',
+            message: data.answer.output_text,
+          },
+        ],
+        pending: undefined,
+      }));
+
+      setLoading(false);
     } catch (error) {
       setLoading(false);
       setError('An error occurred while fetching the data. Please try again.');
       console.log('error', error);
     }
+
     textAreaRef.current?.focus();
   }
 

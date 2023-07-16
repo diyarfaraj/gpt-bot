@@ -109,11 +109,11 @@ export default function Home() {
     setLoading(true);
     setQuery('');
 
+    var apiuri = process.env.NEXT_PUBLIC_CHATBOT_SERVER_URL;
+    console.log('api url', apiuri);
     try {
       const response = await fetch(
-        `http://83.253.106.167:5000/api/ask?question=${encodeURIComponent(
-          question,
-        )}`,
+        `${apiuri}/ask?question=${encodeURIComponent(question)}`,
       );
       const data = await response.json();
 

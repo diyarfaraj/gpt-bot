@@ -111,7 +111,7 @@ export default function Home() {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/api/ask?question=${encodeURIComponent(
+        `http://83.253.106.167:5000/api/ask?question=${encodeURIComponent(
           question,
         )}`,
       );

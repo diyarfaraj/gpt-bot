@@ -110,7 +110,6 @@ export default function Home() {
     setQuery('');
 
     var apiuri = process.env.NEXT_PUBLIC_CHATBOT_SERVER_URL;
-    console.log('api url', apiuri);
     try {
       const response = await fetch(
         `${apiuri}/ask?question=${encodeURIComponent(question)}`,

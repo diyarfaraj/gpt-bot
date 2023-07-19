@@ -1,7 +1,6 @@
 import { useRef, useState, useEffect, useMemo, useCallback } from 'react';
 import styles from '@/styles/Home.module.css';
 import { Message } from '@/types/chat';
-import { fetchEventSource } from '@microsoft/fetch-event-source';
 import ReactMarkdown from 'react-markdown';
 import { Document } from 'langchain/document';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -98,7 +97,12 @@ export default function Home() {
     setLoading(true);
     setQuery('');
 
-    var apiuri = process.env.NEXT_PUBLIC_CHATBOT_SERVER_URL;
+    console.log(process.env.NODE_ENV);
+
+    var apiuri =
+      process.env.NODE_ENV !== 'production'
+        ? 'http://localhost:5000/api'
+        : process.env.NEXT_PUBLIC_CHATBOT_SERVER_URL;
     try {
       const response = await fetch(
         `${apiuri}/ask?question=${encodeURIComponent(question)}`,

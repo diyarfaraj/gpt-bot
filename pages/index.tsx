@@ -1,7 +1,6 @@
 import { useRef, useState, useEffect, useMemo, useCallback } from 'react';
 import styles from '@/styles/Home.module.css';
 import { Message } from '@/types/chat';
-import { fetchEventSource } from '@microsoft/fetch-event-source';
 import ReactMarkdown from 'react-markdown';
 import { Document } from 'langchain/document';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -70,17 +69,6 @@ export default function Home() {
     }
   }, []);
 
-  async function saveMessagesToDb() {
-    // Save the message to the database
-    await fetch('/api/save-message', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ message: messages }),
-    });
-  }
-
   //handle form submission
   async function handleSubmit(e: any) {
     e.preventDefault();
@@ -109,7 +97,12 @@ export default function Home() {
     setLoading(true);
     setQuery('');
 
-    var apiuri = process.env.NEXT_PUBLIC_CHATBOT_SERVER_URL;
+    console.log(process.env.NODE_ENV);
+
+    var apiuri =
+      process.env.NODE_ENV !== 'production'
+        ? 'http://localhost:5000/api'
+        : process.env.NEXT_PUBLIC_CHATBOT_SERVER_URL;
     try {
       const response = await fetch(
         `${apiuri}/ask?question=${encodeURIComponent(question)}`,
@@ -194,13 +187,6 @@ export default function Home() {
       messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
     }
   }, [chatMessages]);
-
-  useEffect(() => {
-    const lastMessage = messages[messages.length - 1];
-    if (lastMessage && lastMessage.type === 'apiMessage') {
-      saveMessagesToDb();
-    }
-  }, [messages.length]);
 
   const handleFileChange = (e: any) => {
     setFile(e.target.files[0]);

@@ -97,15 +97,25 @@ export default function Home() {
     setLoading(true);
     setQuery('');
 
-    console.log(process.env.NODE_ENV);
+    console.log('env d', process.env.NODE_ENV);
 
-    var apiuri =
-      process.env.NODE_ENV !== 'production'
-        ? 'http://localhost:5000/api'
-        : process.env.NEXT_PUBLIC_CHATBOT_SERVER_URL;
+    // var apiuri =
+    //   process.env.NODE_ENV !== 'production'
+    //     ? 'http://localhost:5000/api'
+    //     : process.env.NEXT_PUBLIC_CHATBOT_SERVER_URL;
+    var apiuri = process.env.NEXT_PUBLIC_CHATBOT_SERVER_URL;
     try {
+      const ipResponse = await fetch('https://api.ipify.org?format=json');
+      const ipData = await ipResponse.json();
+      const clientIp = ipData.ip;
+
       const response = await fetch(
         `${apiuri}/ask?question=${encodeURIComponent(question)}`,
+        {
+          headers: {
+            'Client-IP': clientIp,
+          },
+        },
       );
       const data = await response.json();
 

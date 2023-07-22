@@ -40,6 +40,8 @@ export default function Home() {
     setShowSettings((prevShowSettings) => !prevShowSettings);
   };
 
+  var apiuri = process.env.NEXT_PUBLIC_CHATBOT_SERVER_URL;
+
   function typeMessage(
     element: HTMLElement,
     message: string,
@@ -110,7 +112,7 @@ export default function Home() {
       const clientIp = ipData.ip;
 
       const response = await fetch(
-        `${apiuri}/ask?question=${encodeURIComponent(question)}`,
+        `${apiuri}/api/ask?question=${encodeURIComponent(question)}`,
         {
           headers: {
             'Client-IP': clientIp,
@@ -210,9 +212,8 @@ export default function Home() {
     const formData = new FormData();
     formData.append('file', file);
     setLoading(true);
-    console.log('loading diyar true', loading);
     try {
-      const response = await fetch('http://localhost:5000/api/uploadPdf', {
+      const response = await fetch(`${apiuri}/api/uploadPdf`, {
         method: 'POST',
         body: formData,
       });

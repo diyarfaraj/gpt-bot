@@ -5,6 +5,8 @@ import ReactMarkdown from 'react-markdown';
 import { Document } from 'langchain/document';
 import CircularProgress from '@mui/material/CircularProgress';
 import { LoadingButton } from '@mui/lab';
+import { Divider } from '@mui/material';
+import RegisterForm from '@/components/RegisterForm';
 
 export default function Home() {
   const [query, setQuery] = useState<string>('');
@@ -271,6 +273,8 @@ export default function Home() {
                 </LoadingButton>
               </form>
             </div>
+            <Divider />
+            <RegisterForm />
           </section>
         ) : (
           <div className={styles.chatSection}>

@@ -7,6 +7,8 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { LoadingButton } from '@mui/lab';
 import { Divider } from '@mui/material';
 import RegisterForm from '@/components/RegisterForm';
+import LoginButton from '@/components/LoginButton';
+import LogoutButton from '@/components/LogoutButton';
 
 export default function Home() {
   const [query, setQuery] = useState<string>('');
@@ -275,6 +277,8 @@ export default function Home() {
             </div>
             <Divider />
             <RegisterForm />
+            <LoginButton />
+            <LogoutButton />
           </section>
         ) : (
           <div className={styles.chatSection}>

@@ -12,7 +12,7 @@ export default function LoginButton() {
   const handleLogin = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${apiuri}/login`, {
+      const response = await fetch(`${apiuri}/api/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -25,6 +25,7 @@ export default function LoginButton() {
       });
 
       if (!response.ok) {
+        console.log(response);
         throw new Error('Login failed');
       }
 

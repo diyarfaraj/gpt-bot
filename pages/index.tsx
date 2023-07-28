@@ -6,8 +6,8 @@ import { Document } from 'langchain/document';
 import CircularProgress from '@mui/material/CircularProgress';
 import { LoadingButton } from '@mui/lab';
 import { Divider } from '@mui/material';
-import RegisterForm from '@/components/RegisterForm';
-import LoginButton from '@/components/LoginButton';
+import RegisterForm from '@/pages/register';
+import LoginForm from '@/pages/LoginForm';
 import LogoutButton from '@/components/LogoutButton';
 
 export default function Home() {
@@ -276,8 +276,7 @@ export default function Home() {
               </form>
             </div>
             <Divider />
-            <RegisterForm />
-            <LoginButton />
+            <LoginForm />
             <LogoutButton />
           </section>
         ) : (

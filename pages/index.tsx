@@ -6,9 +6,9 @@ import { Document } from 'langchain/document';
 import CircularProgress from '@mui/material/CircularProgress';
 import { LoadingButton } from '@mui/lab';
 import { Divider } from '@mui/material';
-import RegisterForm from '@/pages/register';
-import LoginForm from '@/pages/LoginForm';
+import LoginForm from '@/pages/login';
 import LogoutButton from '@/components/LogoutButton';
+import Settings from './settings';
 
 export default function Home() {
   const [query, setQuery] = useState<string>('');
@@ -204,43 +204,6 @@ export default function Home() {
     }
   }, [chatMessages]);
 
-  const handleFileChange = (e: any) => {
-    setFile(e.target.files[0]);
-  };
-
-  //upload file
-  const handleFileUpload = async () => {
-    if (!file) {
-      return;
-    }
-    const formData = new FormData();
-    formData.append('file', file);
-    setLoading(true);
-    try {
-      const response = await fetch(`${apiuri}/api/uploadPdf`, {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to upload file');
-      }
-
-      const result = await response.json();
-      setUploadedFile(result.fileName);
-      alert('File uploaded successfully');
-    } catch (error) {
-      console.error('Error uploading file:', error);
-      alert('Failed to upload file');
-    } finally {
-      setLoading(false);
-      if (fileInputRef.current) {
-        fileInputRef.current.value = '';
-      }
-      setFile(null);
-    }
-  };
-
   return (
     <>
       <main className={styles.main}>
@@ -255,26 +218,7 @@ export default function Home() {
 
         {showSettings ? (
           <section className="absolute top-0 left-0 w-full h-full bg-white p-4">
-            <h2 className="text-xl font-bold mb-4">Settings</h2>
-            <div className="mt-4">
-              <form>
-                <input
-                  type="file"
-                  accept="application/pdf"
-                  onChange={handleFileChange}
-                  ref={fileInputRef}
-                />
-                <LoadingButton
-                  variant="contained"
-                  color="primary"
-                  onClick={handleFileUpload}
-                  loading={loading}
-                  loadingIndicator={<CircularProgress size={24} />}
-                >
-                  Save
-                </LoadingButton>
-              </form>
-            </div>
+            <Settings />
             <Divider />
             <LoginForm />
             <LogoutButton />

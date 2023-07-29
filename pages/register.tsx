@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import Link from 'next/link';
 
 type FormData = {
   username: string;
@@ -59,6 +60,7 @@ export default function RegisterForm() {
         </label>
         {errors.password && <span>This field is required</span>}
         <input type="submit" value="Register" disabled={loading} />
+        <Link href="/login">Already a member? Log in here.</Link>
       </form>
 
       <style jsx>{`

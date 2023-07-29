@@ -2,12 +2,14 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 export default function LoginForm() {
   const [loading, setLoading] = useState<boolean>(false);
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const apiuri = process.env.NEXT_PUBLIC_CHATBOT_SERVER_URL;
+  const router = useRouter();
 
   const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -35,6 +37,7 @@ export default function LoginForm() {
       alert('Failed to login');
     } finally {
       setLoading(false);
+      router.push('/');
     }
   };
 
@@ -68,6 +71,9 @@ export default function LoginForm() {
           />
         </label>
         <input type="submit" value="Login" disabled={loading} />
+        <div className="register-btn">
+          <Link href="/register">Not a member? Register here.</Link>
+        </div>
       </form>
 
       <style jsx>{`
@@ -108,8 +114,10 @@ export default function LoginForm() {
           background-color: grey;
           cursor: not-allowed;
         }
+        .register-btn {
+          display: inline-block;
+        }
       `}</style>
-      <Link href="/register">Not a member? Register here.</Link>
     </div>
   );
 }

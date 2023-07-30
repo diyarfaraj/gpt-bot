@@ -9,6 +9,7 @@ import { Divider } from '@mui/material';
 import LoginForm from '@/pages/login';
 import LogoutButton from '@/components/LogoutButton';
 import Settings from './settings';
+import Link from 'next/link';
 
 export default function Home() {
   const [query, setQuery] = useState<string>('');
@@ -208,11 +209,8 @@ export default function Home() {
     <>
       <main className={styles.main}>
         {process.env.NODE_ENV === 'development' ? (
-          <button
-            onClick={toggleSettings}
-            className="absolute top-0 right-0 p-2 z-10 "
-          >
-            Toggle Settings
+          <button className="absolute top-0 right-0 p-2 z-10 ">
+            <Link href="/settings">Settings</Link>
           </button>
         ) : null}
 

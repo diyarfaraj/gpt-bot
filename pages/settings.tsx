@@ -4,6 +4,7 @@ import { useRef, useState } from 'react';
 import CircularProgress from '@mui/material/CircularProgress';
 import { LoadingButton } from '@mui/lab';
 import { Tabs, Tab } from '@mui/material';
+import Link from 'next/link';
 
 export default function Settings() {
   const [file, setFile] = useState(null);
@@ -61,6 +62,9 @@ export default function Settings() {
 
   return (
     <div className="container">
+      <button className="absolute top-0 right-0 p-2 z-10 ">
+        <Link href="/">Home</Link>
+      </button>
       <h1>Settings</h1>
 
       <Tabs value={tabValue} onChange={handleTabChange}>

@@ -15,6 +15,7 @@ export default function Settings() {
     namespace: '',
     indexName: '',
   });
+  const [error, setError] = useState(null);
   const [source, setSource] = useState({ systemMessage: '', file: null });
   const [tabValue, setTabValue] = useState(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -60,6 +61,22 @@ export default function Settings() {
     }
   };
 
+  const handleSaveAll = async () => {
+    if (
+      !openAIKey ||
+      !pinecone.apiKey ||
+      !pinecone.namespace ||
+      !pinecone.indexName ||
+      !source.systemMessage
+    ) {
+      setError('Please fill all the fields');
+      return;
+    }
+
+    // Add your logic to save all information to server
+    // If there's an error during saving, set error state
+  };
+
   return (
     <div className="container">
       <button className="absolute top-0 right-0 p-2 z-10 ">
@@ -68,77 +85,93 @@ export default function Settings() {
       <h1>Settings</h1>
 
       <Tabs value={tabValue} onChange={handleTabChange}>
-        <Tab label="OpenAI" />
-        <Tab label="Pinecone" />
-        <Tab label="Source" />
+        <Tab label="API informations" />
+        <Tab label="Source documents" />
       </Tabs>
 
       {tabValue === 0 && (
-        <div>
-          <label>
-            OpenAI API key:
-            <input
-              type="text"
-              value={openAIKey}
-              onChange={(e) => setOpenAIKey(e.target.value)}
-            />
-          </label>
+        <div className="pt-5">
+          <fieldset>
+            <legend> OpenAI</legend>
+            <label>
+              API key:
+              <input
+                type="text"
+                value={openAIKey}
+                onChange={(e) => setOpenAIKey(e.target.value)}
+              />
+            </label>
+
+            <label>
+              System message:
+              <textarea
+                rows={4}
+                value={source.systemMessage}
+                onChange={(e) =>
+                  setSource({ ...source, systemMessage: e.target.value })
+                }
+              />
+            </label>
+          </fieldset>
+
+          <fieldset>
+            <legend>Pinecone</legend>
+
+            <label>
+              API key:
+              <input
+                type="text"
+                value={pinecone.apiKey}
+                onChange={(e) =>
+                  setPinecone({ ...pinecone, apiKey: e.target.value })
+                }
+              />
+            </label>
+
+            <label>
+              Namespace:
+              <input
+                type="text"
+                value={pinecone.namespace}
+                onChange={(e) =>
+                  setPinecone({ ...pinecone, namespace: e.target.value })
+                }
+              />
+            </label>
+
+            <label>
+              Index name:
+              <input
+                type="text"
+                value={pinecone.indexName}
+                onChange={(e) =>
+                  setPinecone({ ...pinecone, indexName: e.target.value })
+                }
+              />
+            </label>
+          </fieldset>
+          <LoadingButton
+            variant="contained"
+            color="primary"
+            onClick={handleSaveAll}
+            loading={loading}
+            loadingIndicator={<CircularProgress size={24} />}
+            style={{
+              float: 'right',
+              backgroundColor: '#3f51b5',
+              color: 'white',
+            }}
+          >
+            Save All
+          </LoadingButton>
+
+          {error && <div className="error">{error}</div>}
         </div>
       )}
 
       {tabValue === 1 && (
         <fieldset>
-          <legend>Pinecone</legend>
-
-          <label>
-            API key:
-            <input
-              type="text"
-              value={pinecone.apiKey}
-              onChange={(e) =>
-                setPinecone({ ...pinecone, apiKey: e.target.value })
-              }
-            />
-          </label>
-
-          <label>
-            Namespace:
-            <input
-              type="text"
-              value={pinecone.namespace}
-              onChange={(e) =>
-                setPinecone({ ...pinecone, namespace: e.target.value })
-              }
-            />
-          </label>
-
-          <label>
-            Index name:
-            <input
-              type="text"
-              value={pinecone.indexName}
-              onChange={(e) =>
-                setPinecone({ ...pinecone, indexName: e.target.value })
-              }
-            />
-          </label>
-        </fieldset>
-      )}
-
-      {tabValue === 2 && (
-        <fieldset>
-          <legend>Source</legend>
-
-          <label>
-            System message:
-            <textarea
-              rows={4}
-              value={source.systemMessage}
-              onChange={(e) =>
-                setSource({ ...source, systemMessage: e.target.value })
-              }
-            />
-          </label>
+          <legend>Source documents</legend>
 
           <label>
             File:
@@ -156,8 +189,13 @@ export default function Settings() {
             onClick={handleFileUpload}
             loading={loading}
             loadingIndicator={<CircularProgress size={24} />}
+            style={{
+              float: 'right',
+              backgroundColor: '#3f51b5',
+              color: 'white',
+            }}
           >
-            Save
+            Save File
           </LoadingButton>
         </fieldset>
       )}

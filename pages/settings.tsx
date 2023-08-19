@@ -15,7 +15,7 @@ export default function Settings() {
     namespace: '',
     indexName: '',
   });
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
   const [source, setSource] = useState({ systemMessage: '', file: null });
   const [tabValue, setTabValue] = useState(0);
   const fileInputRef = useRef<HTMLInputElement>(null);

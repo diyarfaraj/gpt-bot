@@ -79,17 +79,48 @@ export default function Settings() {
 
   return (
     <div className="container">
-      <button className="absolute top-0 right-0 p-2 z-10 ">
+      <button className="absolute top-3 left-10 p-2 z-10 ">
         <Link href="/">Home</Link>
       </button>
       <h1>Settings</h1>
 
       <Tabs value={tabValue} onChange={handleTabChange}>
-        <Tab label="API informations" />
         <Tab label="Source documents" />
+        <Tab label="API informations" />
       </Tabs>
 
       {tabValue === 0 && (
+        <fieldset>
+          <legend>Source documents</legend>
+
+          <label>
+            File:
+            <input
+              type="file"
+              accept="application/pdf"
+              onChange={handleFileChange}
+              ref={fileInputRef}
+            />
+          </label>
+
+          <LoadingButton
+            variant="contained"
+            color="primary"
+            onClick={handleFileUpload}
+            loading={loading}
+            loadingIndicator={<CircularProgress size={24} />}
+            style={{
+              float: 'right',
+              backgroundColor: '#3f51b5',
+              color: 'white',
+            }}
+          >
+            Save File
+          </LoadingButton>
+        </fieldset>
+      )}
+
+      {tabValue === 1 && (
         <div className="pt-5">
           <fieldset>
             <legend> OpenAI</legend>
@@ -167,37 +198,6 @@ export default function Settings() {
 
           {error && <div className="error">{error}</div>}
         </div>
-      )}
-
-      {tabValue === 1 && (
-        <fieldset>
-          <legend>Source documents</legend>
-
-          <label>
-            File:
-            <input
-              type="file"
-              accept="application/pdf"
-              onChange={handleFileChange}
-              ref={fileInputRef}
-            />
-          </label>
-
-          <LoadingButton
-            variant="contained"
-            color="primary"
-            onClick={handleFileUpload}
-            loading={loading}
-            loadingIndicator={<CircularProgress size={24} />}
-            style={{
-              float: 'right',
-              backgroundColor: '#3f51b5',
-              color: 'white',
-            }}
-          >
-            Save File
-          </LoadingButton>
-        </fieldset>
       )}
       <style jsx>{`
         .container {

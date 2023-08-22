@@ -74,7 +74,7 @@ export default function Settings() {
     }
 
     // Add your logic to save all information to server
-    // If there's an error during saving, set error state
+    // If theres an error during saving, set error state
   };
 
   return (

@@ -90,33 +90,37 @@ export default function Settings() {
       </Tabs>
 
       {tabValue === 0 && (
-        <fieldset>
-          <legend>Source documents</legend>
+        <fieldset className="border p-4 rounded-lg shadow-md mb-4">
+          <legend className="text-xl font-semibold mb-2">
+            Source documents
+          </legend>
 
-          <label>
-            File:
-            <input
-              type="file"
-              accept="application/pdf"
-              onChange={handleFileChange}
-              ref={fileInputRef}
-            />
-          </label>
+          <div className="flex flex-col space-y-4">
+            <label className="flex flex-col space-y-2">
+              <span className="text-lg font-medium">File:</span>
+              <input
+                className="p-2 rounded border focus:border-blue-400"
+                type="file"
+                accept="application/pdf"
+                onChange={handleFileChange}
+                ref={fileInputRef}
+              />
+            </label>
 
-          <LoadingButton
-            variant="contained"
-            color="primary"
-            onClick={handleFileUpload}
-            loading={loading}
-            loadingIndicator={<CircularProgress size={24} />}
-            style={{
-              float: 'right',
-              backgroundColor: '#3f51b5',
-              color: 'white',
-            }}
-          >
-            Save File
-          </LoadingButton>
+            <LoadingButton
+              variant="contained"
+              color="primary"
+              onClick={handleFileUpload}
+              loading={loading}
+              loadingIndicator={<CircularProgress size={24} />}
+              style={{
+                backgroundColor: '#3f51b5',
+                color: 'white',
+              }}
+            >
+              Save File
+            </LoadingButton>
+          </div>
         </fieldset>
       )}
 

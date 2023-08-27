@@ -90,10 +90,8 @@ export default function Settings() {
       </Tabs>
 
       {tabValue === 0 && (
-        <fieldset className="border p-4 rounded-lg shadow-md mb-4">
-          <legend className="text-xl font-semibold mb-2">
-            Source documents
-          </legend>
+        <fieldset className="border mt-5 p-4 rounded-lg shadow-md mb-4">
+          <legend>Source documents</legend>
 
           <div className="flex flex-col space-y-4">
             <label className="flex flex-col space-y-2">
@@ -116,6 +114,9 @@ export default function Settings() {
               style={{
                 backgroundColor: '#3f51b5',
                 color: 'white',
+                fontSize: '0.8rem',
+                padding: '6px 12px',
+                float: 'left',
               }}
             >
               Save File
@@ -190,7 +191,7 @@ export default function Settings() {
             color="primary"
             onClick={handleSaveAll}
             loading={loading}
-            loadingIndicator={<CircularProgress size={24} />}
+            loadingIndicator={<CircularProgress size={10} />}
             style={{
               float: 'right',
               backgroundColor: '#3f51b5',

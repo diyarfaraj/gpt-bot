@@ -45,8 +45,6 @@ export default function Home() {
     setShowSettings((prevShowSettings) => !prevShowSettings);
   };
 
-  var apiuri = process.env.NEXT_PUBLIC_CHATBOT_SERVER_URL;
-
   function typeMessage(
     element: HTMLElement,
     message: string,
